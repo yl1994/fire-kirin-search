@@ -1,38 +1,52 @@
 <template>
-    <div id="app" :style="{backgroundImage: 'url('+('bingApis/'+this.imgUrls[this.imageNum])+')'}">
-        <div class="header" >
-            <ul id="header-link">
-                <li v-bind:key="index" v-for="(link,index) in headerLinkList">
-                    <a href="link.url">{{ link.name }}</a>
-                </li>
-            </ul>
-        </div>
-        <router-view />
-        <div class="bottomCell">
-            <div class="imgControls">
-                <div class="imgButtons">
-                    <a title="上一个图像" class="leftButton" :class="imageNum == 0 ? 'disabled' : '' "  @click="handelPrev">
-                        <div class="prevImg"></div>
-                    </a>
-                    <a title="下一个图像" class="rightButton" :class="imageNum == 7 ? 'disabled' : '' "  @click="handelNext">
-                        <div class="nextImg"></div>
-                    </a>
-                </div>
+    <div id="app" style="background-color: #333; ">
+        <div
+            :style="{backgroundImage: 'url('+('bingApis/'+this.imgUrls[this.imageNum])+')',opacity: opacity,transition:  'opacity 500ms', height: '100%'}"
+        >
+            <div class="header">
+                <ul id="header-link">
+                    <li v-bind:key="index" v-for="(link,index) in headerLinkList">
+                        <a href="link.url">{{ link.name }}</a>
+                    </li>
+                </ul>
             </div>
-            <footer id="footer">
-                <div class="footerItems">
-                    <ul>
-                        <li>
-                            <span>京ICP备10036305号</span>
-                        </li>
-                    </ul>
-                    <ul style="float:right;">
-                        <li>
-                            <span>© 2019 Fire-Kirin</span>
-                        </li>
-                    </ul>
+            <router-view />
+            <div class="bottomCell">
+                <div class="imgControls">
+                    <div class="imgButtons">
+                        <a
+                            title="上一个图像"
+                            class="leftButton"
+                            :class="imageNum == 0 ? 'disabled' : '' "
+                            @click="handelPrev"
+                        >
+                            <div class="prevImg"></div>
+                        </a>
+                        <a
+                            title="下一个图像"
+                            class="rightButton"
+                            :class="imageNum == 7 ? 'disabled' : '' "
+                            @click="handelNext"
+                        >
+                            <div class="nextImg"></div>
+                        </a>
+                    </div>
                 </div>
-            </footer>
+                <footer id="footer">
+                    <div class="footerItems">
+                        <ul>
+                            <li>
+                                <span>京ICP备10036305号</span>
+                            </li>
+                        </ul>
+                        <ul style="float:right;">
+                            <li>
+                                <span>© 2019 Fire-Kirin</span>
+                            </li>
+                        </ul>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
 </template>
@@ -52,8 +66,11 @@ export default {
                 { name: "|", url: "" },
                 { name: "Fire-Kirin-Doc", url: "/" }
             ],
+            opacity: 1,
             imageNum: 0,
-            imgUrls: ['/th?id=OHR.LandwasserViaduct_ZH-CN7692075960_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp'],
+            imgUrls: [
+                "/th?id=OHR.LandwasserViaduct_ZH-CN7692075960_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
+            ]
         };
     },
     mounted() {
@@ -61,24 +78,34 @@ export default {
     },
     methods: {
         // 上一张
-        handelPrev(){
-            if(this.imageNum == 0) return;
-            this.imageNum --
+        handelPrev() {
+            if (this.imageNum == 0) return;
+            this.opacity = 0;
+            setTimeout(() => {
+                this.imageNum--;
+                this.opacity = 1;
+            }, 500);
         },
-         // 下一张
-         handelNext(){
-            if(this.imageNum == 7) return;
-            this.imageNum ++
+        // 下一张
+        handelNext() {
+            if (this.imageNum == 7) return;
+            this.opacity = 0;
+            setTimeout(() => {
+                this.imageNum++;
+                this.opacity = 1;
+            }, 500);
         },
         getBgImg() {
             //发送get请求
             let that = this;
             axios
-                .get("bingApis/HPImageArchive.aspx?format=js&idx=0&n=8",)
+                .get("bingApis/HPImageArchive.aspx?format=js&idx=0&n=8")
                 .then(function(response) {
-                    var images = response.data.images.map((image)=>{ return  image.url});
-                    images.pop()
-                    that.imgUrls = that.imgUrls.concat(images);                
+                    var images = response.data.images.map(image => {
+                        return image.url;
+                    });
+                    images.pop();
+                    that.imgUrls = that.imgUrls.concat(images);
                 })
                 .catch(function(error) {
                     // handle error
@@ -203,8 +230,8 @@ div div.imgButtons a.leftButton div.prevImg {
     height: 40px;
     margin: 0 10px;
 }
-.disabled{
-    opacity: .5;
+.disabled {
+    opacity: 0.5;
     cursor: default !important;
 }
 
@@ -215,5 +242,18 @@ div.imgButtons a.rightButton div.nextImg {
     width: 40px;
     height: 40px;
     margin: 0 10px;
+}
+
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+    transition: all 0.3s ease;
+}
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active 用于 2.1.8 以下版本 */ {
+    transform: translateX(10px);
+    opacity: 0;
 }
 </style>
