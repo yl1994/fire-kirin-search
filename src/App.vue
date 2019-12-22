@@ -17,7 +17,7 @@
                         <a
                             title="上一个图像"
                             class="leftButton"
-                            :class="imageNum == 0 ? 'disabled' : '' "
+                            :class="disabled || (imageNum == 0) ? 'disabled' : '' "
                             @click="handelPrev"
                         >
                             <div class="prevImg"></div>
@@ -25,7 +25,7 @@
                         <a
                             title="下一个图像"
                             class="rightButton"
-                            :class="imageNum == 7 ? 'disabled' : '' "
+                            :class="disabled || (imageNum == 7 )? 'disabled' : '' "
                             @click="handelNext"
                         >
                             <div class="nextImg"></div>
@@ -67,6 +67,7 @@ export default {
                 { name: "Fire-Kirin-Doc", url: "/" }
             ],
             opacity: 1,
+            disabled: false,
             imageNum: 0,
             imgUrls: [
                 "/th?id=OHR.LandwasserViaduct_ZH-CN7692075960_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
@@ -79,20 +80,24 @@ export default {
     methods: {
         // 上一张
         handelPrev() {
-            if (this.imageNum == 0) return;
+            if (this.disabled || this.imageNum == 0) return;
             this.opacity = 0;
+            this.disabled = true;
             setTimeout(() => {
                 this.imageNum--;
                 this.opacity = 1;
+                this.disabled = false;
             }, 500);
         },
         // 下一张
         handelNext() {
-            if (this.imageNum == 7) return;
+            if (this.disabled || this.imageNum == 7) return;
             this.opacity = 0;
+            this.disabled = true;
             setTimeout(() => {
                 this.imageNum++;
                 this.opacity = 1;
+                this.disabled = false;
             }, 500);
         },
         getBgImg() {
