@@ -1,7 +1,7 @@
 <template>
     <div id="app" style="background-color: #333; ">
         <div
-            :style="{backgroundImage: 'url('+('bingApis/'+this.imgUrls[this.imageNum])+')',opacity: opacity,transition:  'opacity 500ms', height: '100%'}"
+            :style="{backgroundImage: 'url('+('https://www.bing.com/'+this.imgUrls[this.imageNum])+')',opacity: opacity,transition:  'opacity 500ms', height: '100%'}"
         >
             <div class="header">
                 <ul id="header-link">
