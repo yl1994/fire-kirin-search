@@ -7,7 +7,7 @@
                 <ul id="header-link">
                     <li v-bind:key="index" v-for="(link,index) in headerLinkList">
                         <a v-if="link.url" :href="link.url" target="_blank">{{ link.name }}</a>
-                        <a v-else >{{ link.name }}</a>
+                        <a v-else>{{ link.name }}</a>
                     </li>
                 </ul>
             </div>
@@ -76,9 +76,21 @@ export default {
         };
     },
     mounted() {
+        if (this._isMobile()) {
+            alert(
+                "检测到当前访问设备为移动端，影响体验效果，为了更好体验建议您更换至PC端操作"
+            );
+        }
         this.getBgImg();
     },
+
     methods: {
+        _isMobile() {
+            let flag = navigator.userAgent.match(
+                /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+            );
+            return flag;
+        },
         // 上一张
         handelPrev() {
             if (this.disabled || this.imageNum == 0) return;
