@@ -48,7 +48,7 @@
                             <li
                                 :class="index == searchResultIndex ? 'selected' : ''"
                                 @click="handelSubmit(res)"
-                                @mouseenter="searchResultIndex = index" 
+                                @mouseenter="searchResultIndex = index"
                                 v-bind:key="index"
                                 v-for="(res,index) in searchResults"
                             >
@@ -74,6 +74,7 @@
 import axios from "axios";
 axios.jsonp = (url, data) => {
     var code;
+    var callback_str;
     if (typeof data === "object") {
         code = data.code;
     }
@@ -94,8 +95,13 @@ axios.jsonp = (url, data) => {
         ret += "&_time=" + Date.now();
     }
     //定义回调函数
+    if (code == "bing") {
+        callback_str = "&cb=";
+    } else {
+        callback_str = "&callback=";
+    }
 
-    JSONP.src = `${url}&callback=${callback}${ret}`;
+    JSONP.src = `${url}${callback_str}${callback}${ret}`;
     return new Promise((resolve, reject) => {
         window[code] = {
             sug: function(json) {
@@ -173,25 +179,25 @@ export default {
             var url;
             switch (this.tabCode) {
                 case "bing":
-                    url = `apiBing/qsonhs.aspx?type=cb&q=${this.searchValue}`;
+                    url = `https://api.bing.com/qsonhs.aspx?type=cb&q=${this.searchValue}`;
                     break;
                 case "google":
-                    url = `apiGoogle/complete/search?client=youtube&q=${this.searchValue}`;
+                    url = `http://suggestqueries.google.com/complete/search?client=youtube&q=${this.searchValue}`;
                     break;
                 case "baidu":
-                    url = `apiBaidu/su?format=json&wd=${this.searchValue}`;
+                    url = `https://suggestion.baidu.com/su?format=json&wd=${this.searchValue}`;
                     break;
-                case "haoSo":
-                    url = `apiSo/suggest?encodein=utf-8&encodeout=utf-8&format=json&word=${this.searchValue}`;
+                case "so":
+                    url = `https://sug.so.360.cn/suggest?encodein=utf-8&encodeout=utf-8&word=${this.searchValue}`;
                     break;
                 case "sogou":
                     url = `https://www.sogou.com/suggnew/ajajjson?type=web&key=${this.searchValue}`;
                     break;
                 case "taobao":
-                    url = `apiTaobao/sug?code=utf-8&q=${this.searchValue}`;
+                    url = `https://suggest.taobao.com/sug?code=utf-8&q=${this.searchValue}`;
                     break;
                 default:
-                    url = `apiBing/qsonhs.aspx?type=cb&q=${this.searchValue}`;
+                    url = `https://api.bing.com/qsonhs.aspx?type=cb&q=${this.searchValue}`;
             }
             return url;
         }
@@ -227,27 +233,15 @@ export default {
         },
         changeContent() {
             if (!this.searchValue) return;
-            if (this.tabCode == "sogou") {
-                axios
-                    .jsonp(this.searchUrl, { code: this.tabCode })
-                    .then(res => {
-                        this.parseSogou(res);
-                    })
-                    .catch(err => console.log(err));
-            } else {
-                axios
-                    .get(this.searchUrl)
-                    .then(response => {
-                        this.parseData(response);
-                    })
-                    .catch(function(error) {
-                        // handle error
-                        console.log(error);
-                    })
-                    .finally(function() {
-                        // always executed
-                    });
-            }
+            axios
+                .jsonp(this.searchUrl, { code: this.tabCode })
+                .then(res => {
+                    this.parseData(res);
+                })
+                .catch(err => console.log(err))
+                .finally(function() {
+                    // always executed
+                });
         },
         handelUp() {
             if (this.searchResultIndex == 0) {
@@ -284,7 +278,7 @@ export default {
                 case "baidu":
                     this.parseBaidu(response);
                     break;
-                case "haoSo":
+                case "so":
                     this.parseSo(response);
                     break;
                 case "sogou":
@@ -300,37 +294,30 @@ export default {
 
         // bing   必应
         parseBing(response) {
-            if (response.data.AS.FullResults > 0) {
-                this.searchResults = response.data.AS.Results[0].Suggests.map(
-                    r => {
-                        return { text: r.Txt };
-                    }
-                );
+            if (response.AS.FullResults > 0) {
+                this.searchResults = response.AS.Results[0].Suggests.map(r => {
+                    return { text: r.Txt };
+                });
             }
         },
         // google 谷歌
         parseGoogle(response) {
-            var results = eval(
-                response.data
-                    .replace("window.google.ac.h(", "")
-                    .replace(")", "")
-            );
-            results.shift(); // 去掉第一个数据及用户搜索文本
-            this.searchResults = results[0].map(arr => {
+            response.shift(); // 去掉第一个数据及用户搜索文本
+            this.searchResults = response[0].map(arr => {
                 return { text: arr[0] };
             });
         },
         // baidu  百度
         parseBaidu(response) {
-            var results = eval(response.data.replace("window.baidu.sug", "")).s;
+            var results = response.s;
             this.searchResults = results.map(text => {
                 return { text: text };
             });
         },
         // so     好搜
         parseSo(response) {
-            this.searchResults = response.data.result.map(res => {
-                return { text: res.word };
+            this.searchResults = response.s.map(res => {
+                return { text: res };
             });
         },
         /// sogou 搜狗
@@ -341,7 +328,7 @@ export default {
             });
         },
         parseTaobao(response) {
-            this.searchResults = response.data.result.map(arr => {
+            this.searchResults = response.result.map(arr => {
                 return { text: arr[0] };
             });
         }

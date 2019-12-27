@@ -6,7 +6,8 @@
             <div class="header">
                 <ul id="header-link">
                     <li v-bind:key="index" v-for="(link,index) in headerLinkList">
-                        <a href="link.url">{{ link.name }}</a>
+                        <a v-if="link.url" :href="link.url" target="_blank">{{ link.name }}</a>
+                        <a v-else >{{ link.name }}</a>
                     </li>
                 </ul>
             </div>
@@ -36,12 +37,12 @@
                     <div class="footerItems">
                         <ul>
                             <li>
-                                <span>京ICP备10036305号</span>
+                                <span>苏ICP备19075026号-1</span>
                             </li>
                         </ul>
                         <ul style="float:right;">
                             <li>
-                                <span>© 2019 Fire-Kirin</span>
+                                <span>© 2019 www.fire-kirin.club All rights reserved.</span>
                             </li>
                         </ul>
                     </div>
@@ -58,13 +59,13 @@ export default {
     data() {
         return {
             headerLinkList: [
-                { name: "图片", url: "/" },
-                { name: "视频", url: "/" },
-                { name: "学术", url: "/" },
-                { name: "词典", url: "/" },
-                { name: "地图", url: "/" },
+                { name: "图片", url: "" },
+                { name: "视频", url: "" },
+                { name: "文档", url: "http://doc.fire-kirin.club" },
+                { name: "词典", url: "" },
+                { name: "地图", url: "" },
                 { name: "|", url: "" },
-                { name: "Fire-Kirin-Doc", url: "/" }
+                { name: "Fire-Kirin-Doc", url: "http://doc.fire-kirin.club" }
             ],
             opacity: 1,
             disabled: false,
@@ -104,9 +105,9 @@ export default {
             //发送get请求
             let that = this;
             axios
-                .get("bingApis/HPImageArchive.aspx?format=js&idx=0&n=8")
+                .get("http://yl-test.wicp.vip:2000/get_bing_images")
                 .then(function(response) {
-                    var images = response.data.images.map(image => {
+                    var images = response.data.data.map(image => {
                         return image.url;
                     });
                     images.pop();
