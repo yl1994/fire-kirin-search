@@ -122,13 +122,13 @@ export default {
             tabCode: "bing",
             searchName: "q",
             searchResultIndex: -1,
-            currentAction: "bingApis/search",
+            currentAction: "https://www.bing.com/search",
             seoList: [
                 {
                     text: "必应",
                     code: "bing",
                     queryName: "q",
-                    action: "bingApis/search",
+                    action: "https://www.bing.com/search",
                     icon: require("@/assets/favicons/bing.png")
                 },
                 {
