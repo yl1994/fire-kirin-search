@@ -35,9 +35,15 @@
                 </div>
                 <footer id="footer">
                     <div class="footerItems">
-                        <ul>
-                            <li>
-                                <span>苏ICP备19075026号-1</span>
+                        <ul style="float:left;">
+                            <li>                            
+                                <a  href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32068202000225" target="_blank">                              
+                                    <span>
+                                        <img src="~@/assets/favicons/filling.png" style="margin-top:-5px;">  
+                                       <span style="margin-left:10px"> 苏公网安备 32068202000225号</span>
+                                   </span>
+                                </a> 
+                                 <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32068202000225" target="_blank"><span>苏ICP备19075026号-1</span></a>
                             </li>
                         </ul>
                         <ul style="float:right;">
