@@ -159,13 +159,6 @@ export default {
                     action: "https://www.sogou.com/web",
                     icon: require("@/assets/favicons/sogou.png")
                 },
-                {
-                    text: "淘宝",
-                    code: "taobao",
-                    queryName: "q",
-                    action: "https://s.taobao.com/search",
-                    icon: require("@/assets/favicons/taobao.png")
-                }
             ],
             currentSeo: {
                 text: "必应",
