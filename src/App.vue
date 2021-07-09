@@ -43,7 +43,7 @@
                                        <span style="margin-left:10px"> 苏公网安备 32068202000225号</span>
                                    </span>
                                 </a> 
-                                 <a href="http://www.beian.miit.gov.cn/" target="_blank"><span>苏ICP备19075026号-1</span></a>
+                                 <a href="http://www.beian.gov.cn/" target="_blank"><span>苏ICP备19075026号-1</span></a>
                             </li>
                         </ul>
                         <ul style="float:right;">
